@@ -96,7 +96,14 @@ fn main() {
         .filter(|&x| validate_completeness(x))
         .count();
 
-    println!("Part 1: {}", num_complete)
+    println!("Part 1: {}", num_complete);
+
+    let num_valid = passports.iter()
+        .filter(|&x| validate_completeness(x))
+        .filter(|&x| x.iter().all(|field| field.is_valid()))
+        .count();
+
+    println!("Part 2: {}", num_valid);
 }
 
 
