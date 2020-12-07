@@ -31,7 +31,9 @@ dependencies = [
 name = "day4"
 version = "0.1.0"
 dependencies = [
+ "lazy_static",
  "parse-display",
+ "regex",
 ]
 
 [[package]]
