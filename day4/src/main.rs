@@ -18,31 +18,36 @@ fn main() {
     let file = File::open(&args[1]).unwrap();
     let lines = io::BufReader::new(file).lines().map(|x| x.unwrap());
 
-    let mut passport = HashSet::<String>::new();
-    let mut num_valid = 0;
-
-    let validate_fields = |passport: HashSet<String>| {
-        ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
-            .iter()
-            .all(|&key| passport.contains(key))
-    };
+    let mut passports = Vec::<Vec<PassportField>>::new();
+    let mut passport = Vec::<PassportField>::new();
 
     for line in lines {
         if line.is_empty() {
-            num_valid += validate_fields(passport) as u32;
-            passport = HashSet::<String>::new();
+            passports.push(passport);
+            passport = Vec::<PassportField>::new();
         }
         else {
             line.split(' ').for_each(|x| {
-                let field = x.parse::<PassportField>().unwrap();
-                passport.insert(field.key);
+                passport.push(x.parse::<PassportField>().unwrap());
             });
         }
     }
-
     // Last one gets missed because the final newline
     // has already been stripped
-    num_valid += validate_fields(passport) as u32;
+    passports.push(passport);
 
-    println!("Part 1: {}", num_valid)
+    let validate_completeness = |passport: &Vec<PassportField>| {
+        let keys: HashSet<&str> = passport.iter()
+            .map(|x| x.key.as_str())
+            .collect();
+        ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
+            .iter()
+            .all(|&key| keys.contains(key))
+    };
+
+    let num_complete = passports.iter()
+        .filter(|&x| validate_completeness(x))
+        .count();
+
+    println!("Part 1: {}", num_complete)
 }
