@@ -1,0 +1,10 @@
+[package]
+name = "day7"
+version = "0.1.0"
+authors = ["adrian <cognominative@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+regex = "1"
+lazy_static = "1.4.0"
+itertools = "0.9.0"
